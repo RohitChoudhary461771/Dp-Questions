@@ -1,0 +1,32 @@
+class Solution {
+public:
+bool f(vector<int>&nums,int n,int sum,vector<vector<long>>&dp){
+    //base case
+    if(sum==0)return true;
+    if(n==0)return nums[n]==sum;
+    
+    if(dp[n][sum]!=-1)return dp[n][sum];
+
+    bool nTake=f(nums,n-1,sum,dp);//memoizing
+
+    bool take=false;
+    if(nums[n]<=sum){
+    take=f(nums,n-1,sum-nums[n],dp);
+    }
+
+    return dp[n][sum]=take||nTake;
+}
+    bool canPartition(vector<int>& nums) {
+       int total=0;
+       for(auto it :nums){
+           total+=it;
+       }
+       if(total%2==1)return false;
+       else{
+           int k=total/2;
+           int n=nums.size();
+       vector<vector<long>>dp(n,vector<long>(k+1,-1));
+           return f(nums,n-1,k,dp);
+       }
+    }
+};
