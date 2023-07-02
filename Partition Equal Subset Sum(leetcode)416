@@ -1,32 +1,52 @@
 class Solution {
 public:
-bool f(vector<int>&nums,int n,int sum,vector<vector<long>>&dp){
-    //base case
-    if(sum==0)return true;
+ bool f(vector<int>&nums,int n,int sum,vector<vector<long>>&dp){
+     //base case
+     if(sum==0)return true;
     if(n==0)return nums[n]==sum;
     
     if(dp[n][sum]!=-1)return dp[n][sum];
 
-    bool nTake=f(nums,n-1,sum,dp);//memoizing
+     bool nTake=f(nums,n-1,sum,dp);//memoizing
 
-    bool take=false;
+     bool take=false;
     if(nums[n]<=sum){
-    take=f(nums,n-1,sum-nums[n],dp);
-    }
+     take=f(nums,n-1,sum-nums[n],dp);
+     }
 
-    return dp[n][sum]=take||nTake;
-}
+     return dp[n][sum]=take||nTake;
+ }
     bool canPartition(vector<int>& nums) {
        int total=0;
        for(auto it :nums){
            total+=it;
        }
        if(total%2==1)return false;
-       else{
+      
+         else{
            int k=total/2;
            int n=nums.size();
-       vector<vector<long>>dp(n,vector<long>(k+1,-1));
-           return f(nums,n-1,k,dp);
-       }
-    }
-};
+       vector<vector<bool>>dp(n,vector<bool>(k+1,false));
+    //👉   return f(nums,n-1,k,dp); 
+
+    // 👉 Tabluation
+           for(int i=0;i<n;i++){
+               dp[i][0]=true;
+           }
+           if(nums[0]<=k){
+               dp[0][nums[0]]=true;
+           }
+
+           for(int i=1;i<n;i++){
+               for(int tar=1;tar<=k;tar++){
+                  bool nTake=dp[i-1][tar];
+
+                  bool take=false;
+                 
+                 if(nums[i]<=tar){
+                 take=dp[i-1][tar-nums[i]];
+                }
+                dp[i][tar]=take||nTake;
+               }
+           }
+           return dp[n-1][k];
