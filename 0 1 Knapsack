@@ -1,0 +1,26 @@
+#include<bits/stdc++.h>
+int maxi(vector<int> &values, vector<int> &weights, int n, int w,vector<vector<int>>&dp)
+{//base conditon
+	if(n==0){
+		if(weights[0]<=w){
+			return values[0];
+		}
+		return 0;
+	}
+	if(dp[n][w]!=-1)return dp[n][w];
+
+	int notTake=0+maxi(values,weights,n-1,w,dp);
+	int take=INT_MIN;
+	if(weights[n]<=w){
+		take=values[n]+maxi(values, weights,  n-1, w-weights[n],dp);
+	}
+
+	return dp[n][w]=max(notTake,take);
+}
+
+int maxProfit(vector<int> &values, vector<int> &weights, int n, int w) {
+//👉 memoizaation
+
+	vector<vector<int>>dp(n,vector<int>(w+1,-1));
+	return maxi(values,weights,n-1,w,dp);
+}
