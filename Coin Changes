@@ -1,0 +1,41 @@
+ 
+
+class Solution {
+public:
+    int mini(vector<int>& coins, int amount,int n,vector<vector<int>>&dp){
+  //  👉 base case
+
+        if(amount==0)return 0;
+        if(n==0){
+            if(amount%coins[0]==0)
+            {
+                return amount/coins[0];
+            }
+            else return 1e9;
+        }
+    //👉 Checking if element present in vector dp.
+
+        if(dp[n][amount]!=-1)return dp[n][amount];
+
+    //👉 recursive call with pick & not pick condition.
+ 
+       int nTake=0+mini(coins,amount,n-1,dp);
+
+        int take=1e9;
+        
+        if(coins[n]<=amount){
+            take=1+mini(coins,(amount-coins[n]),n,dp);
+        }
+        
+        return dp[n][amount]= min(take,nTake);
+    }
+
+    int coinChange(vector<int>& coins, int amount) {
+        int n=coins.size();
+        vector<vector<int>>dp(n,vector<int>(amount+1,-1));
+      
+      int ans= mini(coins,amount,n-1,dp);
+      if(ans>=1e9)return -1;
+      return ans;
+    }
+};
